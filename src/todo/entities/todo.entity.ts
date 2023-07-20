@@ -1,7 +1,6 @@
 import {
   Column,
   CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -22,12 +21,12 @@ export class Todo {
   @Column({ type: String, default: TodoStatus.IN_COMPLETE })
   status: TodoStatus;
 
+  @Column({ type: 'date' })
+  dueDate: string;
+
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
-
-  @DeleteDateColumn()
-  deletedAt: Date;
 }

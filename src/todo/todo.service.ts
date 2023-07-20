@@ -19,15 +19,15 @@ export class TodoService {
     return this.todoRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} todo`;
+  findOne(id: number): Promise<Todo> {
+    return this.todoRepository.findOneBy({ id });
   }
 
   update(id: number, updateTodoDto: UpdateTodoDto) {
-    return `This action updates a #${id} todo`;
+    return this.todoRepository.update({ id }, updateTodoDto);
   }
 
   remove(id: number) {
-    return `This action removes a #${id} todo`;
+    return this.todoRepository.delete({ id });
   }
 }
