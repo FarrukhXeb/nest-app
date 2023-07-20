@@ -5,7 +5,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { TodoStatus } from '../types';
+import { TodoStatus } from '../todo-status.enum';
 
 @Entity()
 export class Todo {

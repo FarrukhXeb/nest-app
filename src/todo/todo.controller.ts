@@ -40,12 +40,12 @@ export class TodoController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateTodoDto: UpdateTodoDto,
   ) {
-    this.todoService.update(id, updateTodoDto);
+    return this.todoService.update(id, updateTodoDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id', ParseIntPipe) id: number) {
-    this.todoService.remove(id);
+    return this.todoService.remove(id);
   }
 }

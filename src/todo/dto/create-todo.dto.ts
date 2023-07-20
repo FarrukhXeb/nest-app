@@ -1,5 +1,5 @@
 import { IsDateString, IsEnum, IsNotEmpty, IsString } from 'class-validator';
-import { TodoStatus } from '../types';
+import { TodoStatus } from '../todo-status.enum';
 
 export class CreateTodoDto {
   @IsString()
