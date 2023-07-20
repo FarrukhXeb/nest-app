@@ -1,4 +1,4 @@
-import { IsDateString, IsNotEmpty, IsString } from 'class-validator';
+import { IsDateString, IsEnum, IsNotEmpty, IsString } from 'class-validator';
 import { TodoStatus } from '../types';
 
 export class CreateTodoDto {
@@ -10,8 +10,8 @@ export class CreateTodoDto {
   @IsNotEmpty()
   description: string;
 
-  @IsString()
-  status: TodoStatus = TodoStatus.IN_COMPLETE;
+  @IsEnum(TodoStatus)
+  status: TodoStatus;
 
   @IsDateString()
   @IsNotEmpty()

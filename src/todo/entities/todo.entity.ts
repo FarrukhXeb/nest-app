@@ -18,7 +18,7 @@ export class Todo {
   @Column({ type: String })
   description: string;
 
-  @Column({ type: String, default: TodoStatus.IN_COMPLETE })
+  @Column({ type: 'enum', enum: TodoStatus, default: TodoStatus.IN_COMPLETE })
   status: TodoStatus;
 
   @Column({ type: 'date' })
