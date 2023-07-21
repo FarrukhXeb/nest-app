@@ -1,7 +1,6 @@
 import { User } from 'src/users/entities/user.entity';
 import {
   CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -17,7 +16,4 @@ export class Session {
 
   @CreateDateColumn()
   createdAt: Date;
-
-  @DeleteDateColumn()
-  deletedAt: Date;
 }

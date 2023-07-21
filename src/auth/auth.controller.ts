@@ -41,6 +41,15 @@ export class AuthController {
     });
   }
 
+  @Post('refresh')
+  @UseGuards(AuthGuard('jwt-refresh'))
+  @HttpCode(HttpStatus.OK)
+  public refreshTokens(
+    @JwtRequest() jwt: JwtPayloadType,
+  ): Promise<Omit<LoginResponseType, 'user'>> {
+    return this.authService.refreshTokens(jwt);
+  }
+
   @Get('me')
   @UseGuards(AuthGuard('jwt'))
   @HttpCode(HttpStatus.OK)

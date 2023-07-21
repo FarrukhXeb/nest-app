@@ -26,8 +26,8 @@ export class SessionService {
     return this.sessionRepository.save(this.sessionRepository.create(data));
   }
 
-  async softDelete(id): Promise<void> {
-    await this.sessionRepository.softDelete({
+  async delete(id): Promise<void> {
+    await this.sessionRepository.delete({
       id,
     });
   }

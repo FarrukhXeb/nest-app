@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 import ms from 'ms';
@@ -59,7 +60,23 @@ export class AuthService {
   }
 
   async logout(data: Pick<JwtRefreshPayloadType, 'sessionId'>) {
-    return this.sessionService.softDelete(data.sessionId);
+    return this.sessionService.delete(data.sessionId);
+  }
+
+  async refreshTokens(data: Pick<JwtPayloadType, 'sessionId'>) {
+    const session = await this.sessionService.findOne({ id: data.sessionId });
+    if (!session) throw new UnauthorizedException();
+
+    const { token, refreshToken, tokenExpires } = await this.getTokensData({
+      id: session.user.id,
+      sessionId: session.id,
+    });
+
+    return {
+      token,
+      refreshToken,
+      tokenExpires,
+    };
   }
 
   async me(userJwtPayload: JwtPayloadType): Promise<User> {
