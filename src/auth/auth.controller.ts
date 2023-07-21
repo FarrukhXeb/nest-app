@@ -5,7 +5,6 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  Request,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -14,6 +13,8 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { LoginResponseType } from './types/login-response.type';
 import { User } from 'src/users/entities/user.entity';
+import { JwtRequest } from './decorators/jwt-request.decorator';
+import { JwtPayloadType } from './types/jwt-payload.type';
 
 @Controller('auth')
 export class AuthController {
@@ -34,16 +35,16 @@ export class AuthController {
   @Post('logout')
   @UseGuards(AuthGuard('jwt'))
   @HttpCode(HttpStatus.NO_CONTENT)
-  public async logout(@Request() req): Promise<void> {
+  public async logout(@JwtRequest() jwt: JwtPayloadType): Promise<void> {
     await this.authService.logout({
-      sessionId: req.user.sessionId,
+      sessionId: jwt.sessionId,
     });
   }
 
   @Get('me')
   @UseGuards(AuthGuard('jwt'))
   @HttpCode(HttpStatus.OK)
-  public async me(@Request() req): Promise<User> {
-    return this.authService.me(req.user);
+  public async me(@JwtRequest() jwt: JwtPayloadType): Promise<User> {
+    return this.authService.me(jwt);
   }
 }
