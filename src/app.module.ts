@@ -4,6 +4,9 @@ import { TodoModule } from './todo/todo.module';
 import { TypeormConfigService } from './database/typeorm-config.service';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+import { SessionModule } from './session/session.module';
 
 @Module({
   imports: [
@@ -18,6 +21,9 @@ import { ConfigModule } from '@nestjs/config';
       },
     }),
     TodoModule,
+    AuthModule,
+    UsersModule,
+    SessionModule,
   ],
   controllers: [],
   providers: [],
