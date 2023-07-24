@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { TokenModule } from './token/token.module';
+import { EventsModule } from './events/events.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { TokenModule } from './token/token.module';
     AuthModule,
     UsersModule,
     TokenModule,
+    EventsModule,
   ],
   controllers: [],
   providers: [],
