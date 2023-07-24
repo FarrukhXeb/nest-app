@@ -9,7 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
-import { Session } from 'src/session/entities/session.entity';
+import { Token } from 'src/token/entities/token.entity';
 
 @Entity()
 export class User {
@@ -34,8 +34,8 @@ export class User {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @OneToMany(() => Session, (session) => session.user)
-  sessions: Session[];
+  @OneToMany(() => Token, (Token) => Token.user)
+  tokens: Token[];
 
   @BeforeInsert()
   @BeforeUpdate()

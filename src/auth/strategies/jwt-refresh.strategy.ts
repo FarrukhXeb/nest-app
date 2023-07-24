@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { JwtRefreshPayloadType } from '../types/jwt-refresh-payload.type';
+import { JwtPayloadType } from '../types/jwt-payload.type';
 
 @Injectable()
 export class JwtRefreshStrategy extends PassportStrategy(
@@ -11,12 +11,12 @@ export class JwtRefreshStrategy extends PassportStrategy(
 ) {
   constructor(private readonly configService: ConfigService) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: ExtractJwt.fromUrlQueryParameter('refresh_token'),
       secretOrKey: configService.get('AUTH_REFRESH_SECRET'),
     });
   }
-  public validate(payload: JwtRefreshPayloadType): JwtRefreshPayloadType {
-    if (!payload.sessionId) {
+  public validate(payload: JwtPayloadType): JwtPayloadType {
+    if (!payload.id) {
       throw new UnauthorizedException();
     }
 

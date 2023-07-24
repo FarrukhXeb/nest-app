@@ -5,6 +5,7 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -15,6 +16,7 @@ import { LoginResponseType } from './types/login-response.type';
 import { User } from 'src/users/entities/user.entity';
 import { JwtRequest } from './decorators/jwt-request.decorator';
 import { JwtPayloadType } from './types/jwt-payload.type';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -37,7 +39,7 @@ export class AuthController {
   @HttpCode(HttpStatus.NO_CONTENT)
   public async logout(@JwtRequest() jwt: JwtPayloadType): Promise<void> {
     await this.authService.logout({
-      sessionId: jwt.sessionId,
+      id: jwt.id, // the user id
     });
   }
 
@@ -45,9 +47,9 @@ export class AuthController {
   @UseGuards(AuthGuard('jwt-refresh'))
   @HttpCode(HttpStatus.OK)
   public refreshTokens(
-    @JwtRequest() jwt: JwtPayloadType,
+    @Query() refreshTokenDto: RefreshTokenDto,
   ): Promise<Omit<LoginResponseType, 'user'>> {
-    return this.authService.refreshTokens(jwt);
+    return this.authService.refreshTokens(refreshTokenDto.refresh_token);
   }
 
   @Get('me')

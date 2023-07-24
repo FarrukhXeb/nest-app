@@ -6,7 +6,7 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
-import { SessionModule } from './session/session.module';
+import { TokenModule } from './token/token.module';
 
 @Module({
   imports: [
@@ -23,7 +23,7 @@ import { SessionModule } from './session/session.module';
     TodoModule,
     AuthModule,
     UsersModule,
-    SessionModule,
+    TokenModule,
   ],
   controllers: [],
   providers: [],
