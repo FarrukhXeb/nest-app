@@ -11,7 +11,7 @@ export class CreateTodoDto {
   description: string;
 
   @IsEnum(TodoStatus)
-  status: TodoStatus;
+  status: TodoStatus = TodoStatus.IN_COMPLETE; // Default value
 
   @IsDateString()
   @IsNotEmpty()

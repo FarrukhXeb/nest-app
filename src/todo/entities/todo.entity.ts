@@ -2,10 +2,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { TodoStatus } from '../todo-status.enum';
+import { User } from 'src/users/entities/user.entity';
 
 @Entity()
 export class Todo {
@@ -20,6 +22,9 @@ export class Todo {
 
   @Column({ type: 'enum', enum: TodoStatus, default: TodoStatus.IN_COMPLETE })
   status: TodoStatus;
+
+  @ManyToOne(() => User, (User) => User.todos)
+  user: User;
 
   @Column({ type: 'date' })
   dueDate: string;
