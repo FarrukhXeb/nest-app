@@ -4,6 +4,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { FindOptionsWhere, Repository } from 'typeorm';
+import { RoleEnum } from 'src/roles/roles.enum';
 
 @Injectable()
 export class UsersService {
@@ -12,7 +13,12 @@ export class UsersService {
   ) {}
 
   create(createUserDto: CreateUserDto) {
-    return this.userRepository.save(this.userRepository.create(createUserDto));
+    return this.userRepository.save(
+      this.userRepository.create({
+        ...createUserDto,
+        role: { id: RoleEnum.USER },
+      }),
+    );
   }
 
   findAll() {

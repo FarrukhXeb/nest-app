@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -11,6 +12,7 @@ import {
 import * as bcrypt from 'bcryptjs';
 import { Token } from 'src/token/entities/token.entity';
 import { Todo } from 'src/todo/entities/todo.entity';
+import { Role } from 'src/roles/entities/role.entity';
 
 @Entity()
 export class User {
@@ -40,6 +42,11 @@ export class User {
 
   @OneToMany(() => Todo, (Todo) => Todo.user)
   todos: Todo[];
+
+  @ManyToOne(() => Role, {
+    eager: true,
+  })
+  role?: Role | null;
 
   @BeforeInsert()
   @BeforeUpdate()

@@ -29,6 +29,7 @@ export class TokenService {
       await this.jwtService.signAsync(
         {
           id: user.id,
+          role: user.role.id,
           type: TokenType.ACCESS,
         },
         {
