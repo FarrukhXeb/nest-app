@@ -14,8 +14,7 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { LoginResponseType } from './types/login-response.type';
 import { User } from 'src/users/entities/user.entity';
-import { JwtRequest } from './decorators/jwt-request.decorator';
-import { JwtPayloadType } from './types/jwt-payload.type';
+import { RequestWithUser } from './decorators/user-request.decorator';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 
 @Controller('auth')
@@ -37,9 +36,11 @@ export class AuthController {
   @Post('logout')
   @UseGuards(AuthGuard('jwt'))
   @HttpCode(HttpStatus.NO_CONTENT)
-  public async logout(@JwtRequest() jwt: JwtPayloadType): Promise<void> {
+  public async logout(
+    @RequestWithUser() user: Pick<User, 'id'>,
+  ): Promise<void> {
     await this.authService.logout({
-      id: jwt.id, // the user id
+      id: user.id, // the user id
     });
   }
 
@@ -55,7 +56,7 @@ export class AuthController {
   @Get('me')
   @UseGuards(AuthGuard('jwt'))
   @HttpCode(HttpStatus.OK)
-  public async me(@JwtRequest() jwt: JwtPayloadType): Promise<User> {
-    return this.authService.me(jwt);
+  public async me(@RequestWithUser() user: Pick<User, 'id'>): Promise<User> {
+    return this.authService.me(user.id);
   }
 }

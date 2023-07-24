@@ -64,9 +64,9 @@ export class AuthService {
     };
   }
 
-  async me(userJwtPayload: JwtPayloadType): Promise<User> {
+  async me(id: number): Promise<User> {
     return this.userService.findOne({
-      id: userJwtPayload.id,
+      id,
     });
   }
 }
