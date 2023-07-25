@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -58,5 +59,14 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   public async me(@RequestWithUser() user: Pick<User, 'id'>): Promise<User> {
     return this.authService.me(user.id);
+  }
+
+  @Delete('me')
+  @UseGuards(AuthGuard('jwt'))
+  @HttpCode(HttpStatus.NO_CONTENT)
+  public async delete(
+    @RequestWithUser() user: Pick<User, 'id'>,
+  ): Promise<void> {
+    await this.authService.delete(user.id);
   }
 }

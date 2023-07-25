@@ -7,7 +7,10 @@ export class Token {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User, (user) => user.tokens)
+  @ManyToOne(() => User, (user) => user.tokens, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   user: User;
 
   @Column({ type: String })

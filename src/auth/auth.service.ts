@@ -69,4 +69,8 @@ export class AuthService {
       id,
     });
   }
+
+  async delete(id: number) {
+    await this.userService.remove(id);
+  }
 }

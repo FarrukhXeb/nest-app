@@ -23,7 +23,10 @@ export class Todo {
   @Column({ type: 'enum', enum: TodoStatus, default: TodoStatus.IN_COMPLETE })
   status: TodoStatus;
 
-  @ManyToOne(() => User, (User) => User.todos)
+  @ManyToOne(() => User, (User) => User.todos, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   user: User;
 
   @Column({ type: 'date' })
