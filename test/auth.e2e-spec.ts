@@ -8,6 +8,7 @@ describe('Auth user (e2e)', () => {
   const newUserLastName = faker.person.lastName();
   const newUserEmail = faker.internet.email();
   const newUserPassword = faker.internet.password({ length: 10 });
+  let apiToken;
 
   it('Register new user: /api/auth/register (POST)', async () => {
     return request(app)
@@ -54,6 +55,7 @@ describe('Auth user (e2e)', () => {
         expect(body.refreshToken).toBeDefined();
         expect(body.tokenExpires).toBeDefined();
         expect(body.user.email).toBeDefined();
+        apiToken = body.token;
       });
   });
 
@@ -67,5 +69,14 @@ describe('Auth user (e2e)', () => {
       .post('/api/auth/login')
       .send({ email: newUserEmail, password: '' })
       .expect(HttpStatus.BAD_REQUEST);
+  });
+
+  it('Delete user: /api/auth/me (DELETE)', async () => {
+    return request(app)
+      .delete('/api/auth/me')
+      .auth(apiToken, {
+        type: 'bearer',
+      })
+      .expect(HttpStatus.NO_CONTENT);
   });
 });
