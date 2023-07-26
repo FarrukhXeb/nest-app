@@ -31,6 +31,9 @@ export class User {
   @Column({ type: String, nullable: true })
   lastName: string | null;
 
+  @Column({ type: String, nullable: true })
+  profileImage: string | null;
+
   @CreateDateColumn()
   createdAt: Date;
 
