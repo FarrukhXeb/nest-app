@@ -27,4 +27,8 @@ export class CreateUserDto {
   @IsOptional()
   @IsNumber()
   role?: number;
+
+  @IsString()
+  @IsOptional()
+  profileImage?: string;
 }

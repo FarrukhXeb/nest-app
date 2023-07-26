@@ -4,19 +4,23 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { FindOptionsWhere, Repository } from 'typeorm';
-import { RoleEnum } from 'src/roles/roles.enum';
+import { Role } from 'src/roles/entities/role.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(Role) private roleRespository: Repository<Role>,
   ) {}
 
-  create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto) {
+    const role = await this.roleRespository.findOne({
+      where: { id: createUserDto.role || 2 },
+    });
     return this.userRepository.save(
       this.userRepository.create({
         ...createUserDto,
-        role: { id: createUserDto.role || RoleEnum.USER },
+        role,
       }),
     );
   }
@@ -29,11 +33,11 @@ export class UsersService {
     return this.userRepository.findOne({ where: fields });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return this.userRepository.update(
-      { id },
-      { ...updateUserDto, role: { id: updateUserDto.role || RoleEnum.USER } },
-    );
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const role = await this.roleRespository.findOne({
+      where: { id: updateUserDto.role || 1 },
+    });
+    return this.userRepository.update({ id }, { ...updateUserDto, role });
   }
 
   remove(id: number) {

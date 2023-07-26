@@ -1,0 +1,288 @@
+{
+	"info": {
+		"_postman_id": "a06db34d-a0f9-4248-b35c-befe98578c50",
+		"name": "Nest Project",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "28617872"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"user@example.com\",\n    \"password\": \"testing1234\",\n    \"firstName\": \"user\",\n    \"lastName\": \"zeb\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{HOST}}/auth/register"
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"if (response) {",
+									"    const accessToken = response.token;",
+									"    const refreshToken = response.refreshToken;",
+									"    pm.collectionVariables.set('ACCESS_TOKEN', accessToken);",
+									"    pm.collectionVariables.set('REFRESH_TOKEN', refreshToken);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@example.com\",\n    \"password\": \"testing1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{HOST}}/auth/login"
+					},
+					"response": []
+				},
+				{
+					"name": "Me",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{HOST}}/auth/me"
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.unset(\"ACCESS_TOKEN\");",
+									"pm.collectionVariables.unset(\"REFRESH_TOKEN\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "{{HOST}}/auth/logout"
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"if (pm.response.status !== 'Unauthorized') {",
+									"    const accessToken = response.token;",
+									"    const refreshToken = response.refreshToken;",
+									"    pm.collectionVariables.set('ACCESS_TOKEN', accessToken);",
+									"    pm.collectionVariables.set('REFRESH_TOKEN', refreshToken);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{HOST}}/auth/refresh?refresh_token={{REFRESH_TOKEN}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"auth",
+								"refresh"
+							],
+							"query": [
+								{
+									"key": "refresh_token",
+									"value": "{{REFRESH_TOKEN}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Account",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{HOST}}/auth/me"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Todo",
+			"item": [
+				{
+					"name": "Get todos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{HOST}}/todo"
+					},
+					"response": []
+				},
+				{
+					"name": "Create todo",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Another todo\",\n    \"description\": \"this is a dummy description of a todo\",\n    \"dueDate\": \"2022-10-10T12:09:58.926Z\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{HOST}}/todo"
+					},
+					"response": []
+				},
+				{
+					"name": "Get todo",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{HOST}}/todo/6"
+					},
+					"response": []
+				},
+				{
+					"name": "Update todo",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Testing\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{HOST}}/todo/6"
+					},
+					"response": []
+				},
+				{
+					"name": "Remove todo",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{HOST}}/todo/3"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get users",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{HOST}}/users"
+			},
+			"response": []
+		},
+		{
+			"name": "Upload profile image",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/home/emumba/Downloads/me.jpeg"
+						}
+					]
+				},
+				"url": "{{HOST}}/users/upload-profile-image"
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": {
+			"token": "{{ACCESS_TOKEN}}"
+		}
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "HOST",
+			"value": "localhost:3000/api",
+			"type": "string"
+		},
+		{
+			"key": "ACCESS_TOKEN",
+			"value": ""
+		},
+		{
+			"key": "REFRESH_TOKEN",
+			"value": ""
+		}
+	]
+}
