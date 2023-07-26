@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  api-test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: test
+    container_name: nestjs-test-app
+    env_file:
+      - .env.test
+    ports:
+      - '9000:3000'
+    depends_on:
+      - db
+  db:
+    image: postgres:13
+    container_name: postgres_db
+    restart: unless-stopped
+    ports:
+      - '5433:5432'
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    environment:
+          - POSTGRES_USER=test_user
+          - POSTGRES_PASSWORD=test_password
+          - POSTGRES_DB=test_db
+
+volumes:
+  pg_data:

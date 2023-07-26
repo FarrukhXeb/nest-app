@@ -25,7 +25,7 @@ export class AuthController {
   @Post('register')
   @HttpCode(HttpStatus.NO_CONTENT)
   async register(@Body() createUserDto: RegisterDto): Promise<void> {
-    this.authService.register(createUserDto);
+    return this.authService.register(createUserDto);
   }
 
   @Post('login')
@@ -40,7 +40,7 @@ export class AuthController {
   public async logout(
     @RequestWithUser() user: Pick<User, 'id'>,
   ): Promise<void> {
-    await this.authService.logout({
+    return await this.authService.logout({
       id: user.id, // the user id
     });
   }
@@ -67,6 +67,6 @@ export class AuthController {
   public async delete(
     @RequestWithUser() user: Pick<User, 'id'>,
   ): Promise<void> {
-    await this.authService.delete(user.id);
+    return await this.authService.delete(user.id);
   }
 }

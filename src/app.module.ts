@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { TokenModule } from './token/token.module';
 import { EventsModule } from './events/events.module';
+import { RolesModule } from './roles/roles.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { EventsModule } from './events/events.module';
     UsersModule,
     TokenModule,
     EventsModule,
+    RolesModule,
   ],
   controllers: [],
   providers: [],

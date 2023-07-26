@@ -16,7 +16,7 @@ export class UsersService {
     return this.userRepository.save(
       this.userRepository.create({
         ...createUserDto,
-        role: { id: RoleEnum.USER },
+        role: { id: createUserDto.role || RoleEnum.USER },
       }),
     );
   }
@@ -30,7 +30,10 @@ export class UsersService {
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
-    return this.userRepository.update({ id }, updateUserDto);
+    return this.userRepository.update(
+      { id },
+      { ...updateUserDto, role: { id: updateUserDto.role || RoleEnum.USER } },
+    );
   }
 
   remove(id: number) {

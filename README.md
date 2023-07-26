@@ -1,3 +1,7 @@
+# NestJs Application
+
+This is a simple example of how to create an API with nestjs.
+
 ## Installation
 
 ```bash
@@ -28,4 +32,7 @@ $ yarn run test:e2e
 
 # test coverage
 $ yarn run test:cov
+
+# To run test in a docker environment
+$ yarn run test:e2e:docker
 ```
