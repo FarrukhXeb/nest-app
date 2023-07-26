@@ -4,6 +4,7 @@ import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ConfigService } from '@nestjs/config';
 
 describe('UsersController', () => {
   let controller: UsersController;
@@ -16,6 +17,10 @@ describe('UsersController', () => {
     remove: jest.fn(),
   };
 
+  const mockConfigService = {
+    get: jest.fn(),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UsersController],
@@ -23,6 +28,10 @@ describe('UsersController', () => {
         {
           provide: UsersService,
           useValue: mockUserService,
+        },
+        {
+          provide: ConfigService,
+          useValue: mockConfigService,
         },
       ],
     }).compile();
