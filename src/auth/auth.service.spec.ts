@@ -81,7 +81,7 @@ describe('AuthService', () => {
     expect(response.token).toBeDefined();
   });
 
-  it('should register a user', async () => {
+  it('should not register an already created user', async () => {
     const spyOnRegister = jest.spyOn(service, 'register');
     const dto: RegisterDto = {
       email: faker.internet.email(),
@@ -89,7 +89,9 @@ describe('AuthService', () => {
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
     };
-    await service.register(dto);
+    expect(async () => {
+      await service.register(dto);
+    }).rejects.toThrow(BadRequestException);
     expect(spyOnRegister).toHaveBeenCalled();
   });
 

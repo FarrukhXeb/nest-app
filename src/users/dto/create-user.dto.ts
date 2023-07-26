@@ -22,7 +22,7 @@ export class CreateUserDto {
 
   @IsString()
   @IsOptional()
-  lastName: string;
+  lastName?: string;
 
   @IsOptional()
   @IsNumber()
