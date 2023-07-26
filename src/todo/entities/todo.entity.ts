@@ -25,6 +25,7 @@ export class Todo {
 
   @ManyToOne(() => User, (User) => User.todos, {
     cascade: true,
+    eager: true,
     onDelete: 'CASCADE',
   })
   user: User;

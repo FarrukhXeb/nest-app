@@ -24,7 +24,7 @@ export class TodoController {
   constructor(private readonly todoService: TodoService) {}
 
   @Post()
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.CREATED)
   create(
     @Body() createTodoDto: CreateTodoDto,
     @RequestWithUser() user: Pick<User, 'id'>,
