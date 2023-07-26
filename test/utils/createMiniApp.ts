@@ -15,7 +15,6 @@ export const createMiniApp = async () => {
     imports: [
       ConfigModule.forRoot({
         isGlobal: true,
-        envFilePath: ['.env'],
       }),
       TypeOrmModule.forRootAsync({
         useClass: TypeormConfigService,
