@@ -8,6 +8,10 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "migration:generate": "yarn typeorm -- --dataSource=src/database/data-source.ts migration:generate",
+    "migration:create": "yarn typeorm -- migration:create",
+    "migration:run": "yarn typeorm -- --dataSource=src/database/data-source.ts migration:run",
+    "migration:revert": "yarn typeorm -- --dataSource=src/database/data-source.ts migration:revert",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
@@ -18,7 +22,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "test:e2e:docker": "docker compose -f ./docker-compose.test.yml up --build --abort-on-container-exit"
+    "test:e2e:docker": "docker compose -f ./docker-compose.test.yml up --build --abort-on-container-exit",
+    "typeorm": "env-cmd ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -60,6 +65,7 @@
     "@types/ws": "^8.5.5",
     "@typescript-eslint/eslint-plugin": "^5.59.11",
     "@typescript-eslint/parser": "^5.59.11",
+    "env-cmd": "^10.1.0",
     "eslint": "^8.42.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
