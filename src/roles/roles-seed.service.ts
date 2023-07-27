@@ -14,32 +14,28 @@ export class RolesSeedService {
   ) {}
 
   async run(): Promise<void> {
-    const countUser = await this.roleRepository.count({
+    const countAdmin = await this.roleRepository.count({
       where: {
-        id: RoleEnum.USER,
+        name: 'admin',
       },
     });
-
-    if (!countUser) {
+    if (!countAdmin) {
       await this.roleRepository.save(
         this.roleRepository.create({
-          id: RoleEnum.USER,
-          name: 'user',
+          name: 'admin',
         }),
       );
     }
 
-    const countAdmin = await this.roleRepository.count({
+    const countUser = await this.roleRepository.count({
       where: {
-        id: RoleEnum.ADMIN,
+        name: 'user',
       },
     });
-
-    if (!countAdmin) {
+    if (!countUser) {
       await this.roleRepository.save(
         this.roleRepository.create({
-          id: RoleEnum.ADMIN,
-          name: 'admin',
+          name: 'user',
         }),
       );
     }
