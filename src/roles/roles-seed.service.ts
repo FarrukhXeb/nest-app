@@ -1,47 +1,71 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ConfigService } from '@nestjs/config';
 import { Role } from 'src/roles/entities/role.entity';
 import { Repository } from 'typeorm';
 import { RoleEnum } from './roles.enum';
-import { UsersService } from 'src/users/users.service';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class RolesSeedService {
   constructor(
     @InjectRepository(Role) private roleRepository: Repository<Role>,
-    private userService: UsersService,
-    private configService: ConfigService,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
   ) {}
 
   async run(): Promise<void> {
-    const roles = Object.keys(RoleEnum).filter((key) =>
-      isNaN(Number(key.toLowerCase())),
-    ) as Array<keyof typeof RoleEnum>;
-    const [, count] = await this.roleRepository.findAndCount();
-    if (!count) {
-      const promises = [];
-      for (const role of roles) {
-        promises.push(
-          this.roleRepository.save(this.roleRepository.create({ name: role })),
-        );
-      }
-      await Promise.all(promises);
+    const countUser = await this.roleRepository.count({
+      where: {
+        id: RoleEnum.USER,
+      },
+    });
+
+    if (!countUser) {
+      await this.roleRepository.save(
+        this.roleRepository.create({
+          id: RoleEnum.USER,
+          name: 'user',
+        }),
+      );
+    }
+
+    const countAdmin = await this.roleRepository.count({
+      where: {
+        id: RoleEnum.ADMIN,
+      },
+    });
+
+    if (!countAdmin) {
+      await this.roleRepository.save(
+        this.roleRepository.create({
+          id: RoleEnum.ADMIN,
+          name: 'admin',
+        }),
+      );
     }
 
     // There should be atleast one admin user
-    const users = await this.userService.findAll();
-    const adminCount = users.filter(
-      (user) => user.role.name === 'admin',
-    ).length;
-    if (!adminCount) {
-      this.userService.create({
-        email: this.configService.get('ADMIN_EMAIL'),
-        firstName: 'admin',
-        lastName: 'admin',
-        password: this.configService.get('ADMIN_PASSWORD'),
-        role: RoleEnum.ADMIN,
-      });
+    const adminUser = await this.userRepository.count({
+      where: {
+        role: {
+          id: RoleEnum.ADMIN,
+        },
+      },
+    });
+
+    if (!adminUser) {
+      await this.userRepository.save(
+        this.userRepository.create({
+          firstName: 'Super',
+          lastName: 'Admin',
+          email: 'admin@example.com',
+          password: 'testing1234',
+          role: {
+            id: RoleEnum.ADMIN,
+            name: 'admin',
+          },
+        }),
+      );
     }
   }
 }
