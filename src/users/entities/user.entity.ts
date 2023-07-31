@@ -11,7 +11,6 @@ import {
 } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { Token } from 'src/token/entities/token.entity';
-import { Todo } from 'src/todo/entities/todo.entity';
 import { Role } from 'src/roles/entities/role.entity';
 
 @Entity()
@@ -42,9 +41,6 @@ export class User {
 
   @OneToMany(() => Token, (Token) => Token.user)
   tokens?: Token[];
-
-  @OneToMany(() => Todo, (Todo) => Todo.user)
-  todos: Todo[];
 
   @ManyToOne(() => Role, {
     eager: true,

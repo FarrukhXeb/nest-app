@@ -5,7 +5,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from 'src/auth/auth.module';
 import { TypeormConfigService } from 'src/database/typeorm-config.service';
 import { RolesModule } from 'src/roles/roles.module';
-import { TodoModule } from 'src/todo/todo.module';
 import { TokenModule } from 'src/token/token.module';
 import { UsersModule } from 'src/users/users.module';
 import { DataSource, DataSourceOptions } from 'typeorm';
@@ -22,7 +21,6 @@ export const createMiniApp = async () => {
           return new DataSource(options).initialize();
         },
       }),
-      TodoModule,
       AuthModule,
       UsersModule,
       TokenModule,
