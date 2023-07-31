@@ -5,20 +5,39 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Role } from 'src/roles/entities/role.entity';
+import { UserFactory } from './user.factory';
 
 describe('UsersService', () => {
   let service: UsersService;
+  const users: User[] = UserFactory.createMany(10);
+  const userRole = {
+    id: 2,
+    name: 'user',
+  };
   const mockUserRepository = {
-    find: jest.fn(() => []),
-    findOne: jest.fn(() => ({ id: 1 })),
-    save: jest.fn((dto) => dto),
-    create: jest.fn((dto) => dto),
+    find: jest.fn(() => users),
+    findOne: jest.fn(({ where: { id } }) => {
+      return users.find((user) => user.id === id);
+    }),
+    save: jest.fn((user) => {
+      users.push(user);
+      return users[users.length - 1];
+    }),
+    create: jest.fn((dto: CreateUserDto) => {
+      return {
+        ...dto,
+        id: users.length + 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        role: userRole,
+      };
+    }),
     update: jest.fn(),
     delete: jest.fn(),
   };
 
   const mockRoleRepository = {
-    findOne: jest.fn(),
+    findOne: jest.fn(() => userRole),
   };
 
   beforeEach(async () => {
@@ -47,8 +66,8 @@ describe('UsersService', () => {
       lastName: faker.person.lastName(),
     };
     const response = await service.create(user);
-    expect(response.email).toBe(user.email);
     expect(spyOnCreate).toHaveBeenCalled();
+    expect(response.email).toBe(user.email);
   });
 
   it('should find all users', async () => {

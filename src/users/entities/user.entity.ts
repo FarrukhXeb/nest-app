@@ -29,10 +29,10 @@ export class User {
   firstName: string;
 
   @Column({ type: String, nullable: true })
-  lastName: string | null;
+  lastName?: string | null;
 
   @Column({ type: String, nullable: true })
-  profileImage: string | null;
+  profileImage?: string | null;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -41,7 +41,7 @@ export class User {
   updatedAt: Date;
 
   @OneToMany(() => Token, (Token) => Token.user)
-  tokens: Token[];
+  tokens?: Token[];
 
   @OneToMany(() => Todo, (Todo) => Todo.user)
   todos: Todo[];
@@ -53,7 +53,7 @@ export class User {
 
   @BeforeInsert()
   @BeforeUpdate()
-  async setPassword() {
+  async setPassword?() {
     this.password = await bcrypt.hash(this.password, 10);
   }
 }

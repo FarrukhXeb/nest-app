@@ -12,6 +12,7 @@ import {
   UploadedFile,
   ParseFilePipe,
   FileTypeValidator,
+  BadRequestException,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -36,6 +37,9 @@ export class UsersController {
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
+    const user = this.usersService.findOne({ email: createUserDto.email });
+    if (user)
+      throw new BadRequestException('User already exists with the given email');
     return this.usersService.create(createUserDto);
   }
 

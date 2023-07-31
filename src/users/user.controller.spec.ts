@@ -5,14 +5,20 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ConfigService } from '@nestjs/config';
+import { UserFactory } from './user.factory';
+import { User } from './entities/user.entity';
 
 describe('UsersController', () => {
   let controller: UsersController;
+  const users: User[] = UserFactory.createMany(10);
 
   const mockUserService = {
-    create: jest.fn((dto) => dto),
-    findAll: jest.fn(() => []),
-    findOne: jest.fn((id) => id),
+    findOne: jest.fn(({ id }) => users.find((user) => user.id === id)),
+    create: jest.fn((dto) => {
+      users.push(dto);
+      return users[users.length - 1];
+    }),
+    findAll: jest.fn(() => users),
     update: jest.fn((dto) => dto),
     remove: jest.fn(),
   };
