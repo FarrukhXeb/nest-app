@@ -10,6 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Question } from './question.entity';
+import { Response } from './response.entity';
 
 @Entity()
 export class Poll {
@@ -32,18 +33,17 @@ export class Poll {
   @Column({ type: 'timestamp' })
   endDate: string;
 
-  @ManyToMany(() => User, (user) => user.polls, { cascade: true })
+  @ManyToMany(() => User, (user) => user.polls)
   participants: User[];
 
-  @ManyToOne(() => User, (user) => user.createdPolls, {
-    cascade: true,
-  })
+  @ManyToOne(() => User, (user) => user.createdPolls)
   user: User;
 
-  @OneToMany(() => Question, (question) => question.poll, {
-    cascade: true,
-  })
+  @OneToMany(() => Question, (question) => question.poll)
   questions: Question[];
+
+  @OneToMany(() => Response, (response) => response.poll)
+  responses: Response[];
 
   @CreateDateColumn()
   createdAt: Date;
