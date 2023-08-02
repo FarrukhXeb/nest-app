@@ -7,9 +7,14 @@ import { Poll } from './entities/poll.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Role } from 'src/roles/entities/role.entity';
 import { QuestionsModule } from './questions/questions.module';
+import { OptionsModule } from './options/options.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Poll, User, Role]), QuestionsModule],
+  imports: [
+    TypeOrmModule.forFeature([Poll, User, Role]),
+    QuestionsModule,
+    OptionsModule,
+  ],
   providers: [PollsService, UsersService],
   controllers: [PollsController],
 })

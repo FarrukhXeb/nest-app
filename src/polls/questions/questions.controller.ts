@@ -3,6 +3,7 @@ import {
   Controller,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   UseGuards,
   UseInterceptors,
@@ -11,6 +12,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { CreateQuestionDto } from '../dtos/create-question.dto';
 import { QuestionsService } from './questions.service';
 import { PollWithIdInterceptor } from '../interceptors/poll-with-id.interceptor';
+import { UpdateQuestionDto } from '../dtos/update-question.dto';
 
 @Controller('polls/:id/questions')
 @UseGuards(AuthGuard('jwt'))
@@ -23,5 +25,13 @@ export class QuestionsController {
     @Body() dto: CreateQuestionDto,
   ) {
     return this.questionService.create(id, dto);
+  }
+
+  @Patch(':questionId')
+  update(
+    @Param('questionId', ParseIntPipe) questionId: number,
+    @Body() dto: UpdateQuestionDto,
+  ) {
+    return this.questionService.update(questionId, dto);
   }
 }
