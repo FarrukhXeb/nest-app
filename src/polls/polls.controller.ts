@@ -1,4 +1,12 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CreatePollDto } from './dtos/create-poll.dto';
 import { PollsService } from './polls.service';
@@ -15,5 +23,10 @@ export class PollsController {
     @RequestWithUser() user: Pick<User, 'id'>,
   ) {
     return this.pollsService.create(createPollDto, user.id);
+  }
+
+  @Get(':id')
+  findById(@Param('id', ParseIntPipe) id: number) {
+    return this.pollsService.findOne({ id });
   }
 }

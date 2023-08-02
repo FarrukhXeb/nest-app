@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreatePollDto } from './dtos/create-poll.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Poll } from './entities/poll.entity';
-import { Repository, In } from 'typeorm';
+import { Repository, In, FindOptionsWhere } from 'typeorm';
 import { UsersService } from 'src/users/users.service';
 import { UpdatePollDto } from './dtos/update-poll.dto';
 
@@ -29,6 +29,14 @@ export class PollsService {
   async update(id: number, dto: UpdatePollDto) {
     const participants = await this.getParticipants(dto);
     return this.pollRepository.update({ id }, { ...dto, participants });
+  }
+
+  async findOne(where: FindOptionsWhere<Poll>) {
+    return this.pollRepository.findOne({
+      where,
+      select: ['id', 'title'],
+      relations: ['questions'],
+    });
   }
 
   private async getParticipants(dto: CreatePollDto | UpdatePollDto) {

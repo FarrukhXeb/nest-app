@@ -19,6 +19,16 @@ describe('PollsController', () => {
       title: newPoll.title,
       participants: [{ id: 12 }, { id: 43 }, { id: 2 }],
     }),
+    findOne: jest.fn().mockReturnValue({
+      id: 1,
+      title: 'test poll',
+      participants: [{ id: 12 }, { id: 43 }, { id: 2 }],
+      questions: [
+        { id: 1, text: 'test question' },
+        { id: 2, text: 'test question 2' },
+        { id: 3, text: 'test question 3' },
+      ],
+    }),
   };
 
   beforeEach(async () => {
@@ -45,5 +55,13 @@ describe('PollsController', () => {
       newPoll.participants.includes(user.id),
     );
     expect(contains).toBeTruthy();
+  });
+
+  it('should get a poll with questions', async () => {
+    const response = await controller.findById(1);
+    expect(response).toBeDefined();
+    expect(response.id).toBe(1);
+    expect(response.questions).toBeDefined();
+    expect(response.questions.length).toBe(3);
   });
 });

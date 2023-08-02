@@ -40,6 +40,20 @@ describe('PollsService', () => {
               }),
             ),
             create: jest.fn().mockReturnValue(newPoll),
+            findOne: jest.fn().mockReturnValue({
+              id: 12,
+              text: 'test poll',
+              questions: [
+                {
+                  id: 1,
+                  text: 'test question',
+                },
+                {
+                  id: 2,
+                  text: 'test question',
+                },
+              ],
+            }),
           },
         },
       ],
@@ -58,5 +72,11 @@ describe('PollsService', () => {
   it('should create a poll', async () => {
     const response = await service.create(newPoll, 1);
     expect(response).toBeDefined();
+  });
+
+  it('should get a poll with questions', async () => {
+    const response = await service.findOne({ id: 1 });
+    expect(response).toBeDefined();
+    expect(response.questions).toBeDefined();
   });
 });
