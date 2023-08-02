@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { TokenModule } from './token/token.module';
 import { RolesModule } from './roles/roles.module';
+import { PollsModule } from './polls/polls.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { RolesModule } from './roles/roles.module';
     UsersModule,
     TokenModule,
     RolesModule,
+    PollsModule,
   ],
   controllers: [],
   providers: [],

@@ -29,6 +29,10 @@ export class UsersService {
     return this.userRepository.find();
   }
 
+  find(fields: FindOptionsWhere<User>) {
+    return this.userRepository.find({ where: fields });
+  }
+
   findOne(fields: FindOptionsWhere<User>) {
     return this.userRepository.findOne({ where: fields });
   }

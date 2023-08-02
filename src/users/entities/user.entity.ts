@@ -4,6 +4,8 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -12,6 +14,7 @@ import {
 import * as bcrypt from 'bcryptjs';
 import { Token } from 'src/token/entities/token.entity';
 import { Role } from 'src/roles/entities/role.entity';
+import { Poll } from 'src/polls/entities/poll.entity';
 
 @Entity()
 export class User {
@@ -46,6 +49,13 @@ export class User {
     eager: true,
   })
   role?: Role | null;
+
+  @ManyToMany(() => Poll, (poll) => poll.participants)
+  @JoinTable()
+  polls?: Poll[];
+
+  @OneToMany(() => Poll, (poll) => poll.user, { nullable: true })
+  createdPolls?: Poll[];
 
   @BeforeInsert()
   @BeforeUpdate()
