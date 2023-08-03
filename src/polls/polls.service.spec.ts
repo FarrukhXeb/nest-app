@@ -54,6 +54,43 @@ describe('PollsService', () => {
                 },
               ],
             }),
+            find: jest.fn().mockReturnValue([
+              {
+                id: 12,
+                text: 'test poll',
+                questions: [
+                  {
+                    id: 1,
+                    text: 'test question',
+                  },
+                  {
+                    id: 2,
+                    text: 'test question',
+                  },
+                ],
+                responses: [
+                  {
+                    id: 1,
+                    text: 'test response',
+                    question: {
+                      id: 1,
+                      text: 'test question',
+                    },
+                  },
+                  {
+                    id: 2,
+                    text: 'test response',
+                    question: {
+                      id: 2,
+                      text: 'test question',
+                    },
+                  },
+                ],
+                user: {
+                  id: 1,
+                },
+              },
+            ]),
           },
         },
       ],
@@ -78,5 +115,10 @@ describe('PollsService', () => {
     const response = await service.findOne({ id: 1 });
     expect(response).toBeDefined();
     expect(response.questions).toBeDefined();
+  });
+
+  it('should get all the polls with responses', async () => {
+    const response = await service.findAllWithResponses(1);
+    expect(response).toBeDefined();
   });
 });

@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PollsController } from './polls.controller';
 import { CreatePollDto } from './dtos/create-poll.dto';
 import { PollsService } from './polls.service';
+import { ResponsesService } from './responses/responses.service';
 
 describe('PollsController', () => {
   let controller: PollsController;
@@ -38,6 +39,12 @@ describe('PollsController', () => {
         {
           provide: PollsService,
           useValue: mockPollsService,
+        },
+        {
+          provide: ResponsesService,
+          useValue: {
+            submitResponse: jest.fn().mockResolvedValue({}),
+          },
         },
       ],
     }).compile();

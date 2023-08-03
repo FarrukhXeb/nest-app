@@ -54,4 +54,11 @@ export class PollsService {
     }
     return participants;
   }
+
+  findAllWithResponses(id: number) {
+    return this.pollRepository.findOne({
+      where: { id },
+      relations: ['responses', 'responses.option', 'responses.question'],
+    });
+  }
 }
