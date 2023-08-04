@@ -8,6 +8,20 @@ This is a simple example of how to create an API with nestjs.
 $ yarn install
 ```
 
+Setup the `.env` file using the `.env.example`. After setting up the database 
+
+```bash
+$ yarn migration:run
+```
+
+This will migrate and insert dummy data in your database.
+
+```
+Test user
+email: admin@example.com
+password: testing1234
+```
+
 ## Running the app
 
 ```bash
