@@ -20,6 +20,9 @@ export class Role1690437022644 implements MigrationInterface {
         ],
       }),
     );
+    await queryRunner.query(
+      `INSERT INTO role (name) VALUES  ('admin'), ('user')`,
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
