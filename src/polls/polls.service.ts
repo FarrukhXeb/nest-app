@@ -34,8 +34,20 @@ export class PollsService {
   async findOne(where: FindOptionsWhere<Poll>) {
     return this.pollRepository.findOne({
       where,
-      select: ['id', 'title'],
-      relations: ['questions'],
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        user: {
+          id: true,
+          email: true,
+        },
+        participants: {
+          id: true,
+          email: true,
+        },
+      },
+      relations: ['questions', 'participants'],
     });
   }
 
@@ -60,5 +72,15 @@ export class PollsService {
       where: { id },
       relations: ['responses', 'responses.option', 'responses.question'],
     });
+  }
+
+  checkIsParticipantOrOwner(pollId: number, userId: number) {
+    return this.pollRepository
+      .createQueryBuilder('poll')
+      .leftJoin('poll.participants', 'participants')
+      .where('poll.id = :pollId', { pollId })
+      .andWhere('poll.userId = :userId', { userId })
+      .orWhere('participants.id = :userId', { userId })
+      .getOne();
   }
 }

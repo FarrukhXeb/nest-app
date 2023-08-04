@@ -14,6 +14,7 @@ import { RequestWithUser } from 'src/auth/decorators/user-request.decorator';
 import { User } from 'src/users/entities/user.entity';
 import { ResponsesService } from './responses/responses.service';
 import { CreateResponsesDto } from './dtos/create-responses.dto';
+import { PollGuard } from './polls.guard';
 
 @Controller('polls')
 @UseGuards(AuthGuard('jwt'))
@@ -31,11 +32,13 @@ export class PollsController {
   }
 
   @Get(':id')
+  @UseGuards(PollGuard)
   findById(@Param('id', ParseIntPipe) id: number) {
     return this.pollsService.findOne({ id });
   }
 
   @Post(':id/responses')
+  @UseGuards(PollGuard)
   async submitResponse(
     @Param('id', ParseIntPipe) id: number,
     @RequestWithUser() user: Pick<User, 'id'>,
@@ -45,6 +48,7 @@ export class PollsController {
   }
 
   @Get(':id/responses')
+  @UseGuards(PollGuard)
   async getPollResponses(@Param('id', ParseIntPipe) id: number) {
     return this.pollsService.findAllWithResponses(id);
   }

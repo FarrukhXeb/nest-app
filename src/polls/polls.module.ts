@@ -9,6 +9,7 @@ import { Role } from 'src/roles/entities/role.entity';
 import { QuestionsModule } from './questions/questions.module';
 import { OptionsModule } from './options/options.module';
 import { ResponsesModule } from './responses/responses.module';
+import { PollGuard } from './polls.guard';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { ResponsesModule } from './responses/responses.module';
     OptionsModule,
     ResponsesModule,
   ],
-  providers: [PollsService, UsersService],
+  providers: [PollsService, UsersService, PollGuard],
   controllers: [PollsController],
 })
 export class PollsModule {}

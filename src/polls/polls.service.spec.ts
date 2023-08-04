@@ -91,6 +91,21 @@ describe('PollsService', () => {
                 },
               },
             ]),
+            createQueryBuilder: () => {
+              return {
+                leftJoin: () => {
+                  return {
+                    where: () => ({
+                      andWhere: () => ({
+                        orWhere: () => ({
+                          getOne: jest.fn().mockReturnValue(null),
+                        }),
+                      }),
+                    }),
+                  };
+                },
+              };
+            },
           },
         },
       ],
@@ -120,5 +135,10 @@ describe('PollsService', () => {
   it('should get all the polls with responses', async () => {
     const response = await service.findAllWithResponses(1);
     expect(response).toBeDefined();
+  });
+
+  it('should return null if user is not a participant', async () => {
+    const response = await service.checkIsParticipantOrOwner(1, 1);
+    expect(response).toBeNull();
   });
 });
