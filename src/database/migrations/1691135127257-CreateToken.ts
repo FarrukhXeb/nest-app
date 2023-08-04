@@ -22,6 +22,7 @@ export class CreateToken1691135127257 implements MigrationInterface {
     if (foreignKey) {
       await queryRunner.dropForeignKey('token', foreignKey);
     }
+    await queryRunner.query(`DROP type token_type`);
     await queryRunner.query(`DROP TABLE token`);
   }
 }
