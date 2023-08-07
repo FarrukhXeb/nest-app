@@ -31,6 +31,11 @@ export class PollsController {
     return this.pollsService.create(createPollDto, user.id);
   }
 
+  @Get()
+  getPolls(@RequestWithUser() user: Pick<User, 'id'>) {
+    return this.pollsService.find(user.id);
+  }
+
   @Get(':id')
   @UseGuards(PollGuard)
   findById(@Param('id', ParseIntPipe) id: number) {

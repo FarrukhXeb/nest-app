@@ -31,6 +31,26 @@ export class PollsService {
     return this.pollRepository.update({ id }, { ...dto, participants });
   }
 
+  async find(userId: number, fields: FindOptionsWhere<Poll> = {}) {
+    return this.pollRepository.find({
+      where: { ...fields, user: { id: userId } },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        user: {
+          id: true,
+          email: true,
+        },
+        participants: {
+          id: true,
+          email: true,
+        },
+      },
+      relations: ['questions', 'participants'],
+    });
+  }
+
   async findOne(where: FindOptionsWhere<Poll>) {
     return this.pollRepository.findOne({
       where,
