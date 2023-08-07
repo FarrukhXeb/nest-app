@@ -71,12 +71,16 @@ describe('ResponsesService', () => {
                 option: { id: 1 },
               },
             ]),
-            findOne: jest
-              .fn()
-              .mockImplementation(({ where: { id, ...rest } }) => {
-                if (rest.user.id === 2) return {};
+            findOne: jest.fn().mockImplementation(
+              ({
+                where: {
+                  user: { id },
+                },
+              }) => {
+                if (id === 2) return {};
                 return null;
-              }),
+              },
+            ),
           },
         },
         {
