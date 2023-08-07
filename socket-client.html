@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+    }
+    button {
+      margin: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .button-wrapper {
+      display: flex;
+      justify-content: center;
+    }
+    #responses {
+      text-align: center;
+      font-size: 30px;
+      margin: 20px;
+    }
+    #subscribe {
+      background-color: #4caf50;
+      color: #fff;
+    }
+    #unsubscribe {
+      background-color: #f44336;
+      color: #fff;
+    }
+    h1 {
+      text-align: center;
+    }
+  </style>
+  <body>
+    <h1>Responses</h1>
+    <div id="responses"></div>
+    <div class="button-wrapper">
+      <button id="subscribe" name="subscribe" value="Subscribe">
+        Subscribe
+      </button>
+      <button id="unsubscribe" name="unsubscribe" value="Unsubscribe">
+        Unsubscribe
+      </button>
+    </div>
+    <script
+      src="https://cdn.socket.io/4.6.0/socket.io.min.js"
+      integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      const pollId = 1;
+      const setResponseValue = (value) => {
+        document.getElementById('responses').innerHTML = value;
+      };
+      const socket = io('ws://localhost:3000');
+      socket.on('connect', () => {
+        console.log('connected');
+      });
+
+      socket.on('pollUpdated', (data) => {
+        setResponseValue(data.responses.length);
+      });
+
+      document.getElementById('subscribe').addEventListener('click', () => {
+        socket.emit('subscribeToPoll', { pollId });
+      });
+
+      document.getElementById('unsubscribe').addEventListener('click', () => {
+        socket.emit('unsubscribeFromPoll', { pollId });
+      });
+    </script>
+  </body>
+</html>
