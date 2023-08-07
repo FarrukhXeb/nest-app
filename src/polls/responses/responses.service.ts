@@ -1,5 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { In, Repository } from 'typeorm';
 import { Response } from '../entities/response.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateResponsesDto } from '../dtos/create-responses.dto';
@@ -34,6 +38,18 @@ export class ResponsesService {
     if (questionOptionNotMatched)
       throw new NotFoundException(
         `The provided question does not belong to the poll`,
+      );
+
+    // Validating that the response has already been submitted by the user for a specific question in the poll
+    const responseExists = await this.responsesRepository.findOne({
+      where: {
+        user: { id: userId },
+        question: { id: In(responses.map((response) => response.questionId)) },
+      },
+    });
+    if (responseExists)
+      throw new BadRequestException(
+        `Response has already been submitted for the question`,
       );
 
     // Validating that the option ids provided in the request belong to the question

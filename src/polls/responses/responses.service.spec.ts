@@ -71,6 +71,12 @@ describe('ResponsesService', () => {
                 option: { id: 1 },
               },
             ]),
+            findOne: jest
+              .fn()
+              .mockImplementation(({ where: { id, ...rest } }) => {
+                if (rest.user.id === 2) return {};
+                return null;
+              }),
           },
         },
         {
@@ -172,5 +178,11 @@ describe('ResponsesService', () => {
   it('should submit a valid response', async () => {
     const response = await service.submitResponse(payload, 1, 1);
     expect(response).toBeDefined();
+  });
+
+  it('should not submit a response if user has already responded to a question', async () => {
+    await expect(service.submitResponse(payload, 2, 1)).rejects.toThrow(
+      `Response has already been submitted for the question`,
+    );
   });
 });
