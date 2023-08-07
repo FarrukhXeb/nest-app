@@ -40,20 +40,25 @@ describe('PollsService', () => {
               }),
             ),
             create: jest.fn().mockReturnValue(newPoll),
-            findOne: jest.fn().mockReturnValue({
-              id: 12,
-              text: 'test poll',
-              questions: [
-                {
-                  id: 1,
-                  text: 'test question',
-                },
-                {
-                  id: 2,
-                  text: 'test question',
-                },
-              ],
-            }),
+            findOne: jest
+              .fn()
+              .mockImplementation(({ where: { id: pollId } }) => {
+                if (pollId === 2) return null;
+                return {
+                  id: 12,
+                  text: 'test poll',
+                  questions: [
+                    {
+                      id: 1,
+                      text: 'test question',
+                    },
+                    {
+                      id: 2,
+                      text: 'test question',
+                    },
+                  ],
+                };
+              }),
             find: jest.fn().mockReturnValue([
               {
                 id: 12,
@@ -127,7 +132,7 @@ describe('PollsService', () => {
   });
 
   it('should get a poll with questions', async () => {
-    const response = await service.findOne({ id: 1 });
+    const response = await service.findOne({}, 1);
     expect(response).toBeDefined();
     expect(response.questions).toBeDefined();
   });
@@ -135,6 +140,11 @@ describe('PollsService', () => {
   it('should get all the polls with responses', async () => {
     const response = await service.findAllWithResponses(1);
     expect(response).toBeDefined();
+  });
+
+  it('should return null if user is not the owner', async () => {
+    const response = await service.findOne({ id: 2 }, 2);
+    expect(response).toBeNull();
   });
 
   it('should return null if user is not a participant', async () => {

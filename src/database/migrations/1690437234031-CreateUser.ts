@@ -19,22 +19,25 @@ export class CreateUser1690437234031 implements MigrationInterface {
         CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"),
         CONSTRAINT "FK_c28e52f758e7bbc53828db92194" FOREIGN KEY ("roleId") REFERENCES "role"("id") ON DELETE NO ACTION ON UPDATE NO ACTION
       );
+
+      CREATE INDEX "IDX_e12875dfb3b1d92d7d7c5377e2" ON "user" ("email");
     `);
     const password = await hash('testing1234', 12);
-    await queryRunner.query(`
-      INSERT INTO "user" ("email", "password", "firstName", "roleId")
-      VALUES
-        ('admin@example.com', '${password}', 'Super Admin', 1),
-        ('${faker.internet.email()}', '${password}', '${faker.person.firstName()}', 2),
-        ('${faker.internet.email()}', '${password}', '${faker.person.firstName()}', 2),
-        ('${faker.internet.email()}', '${password}', '${faker.person.firstName()}', 2),
-        ('${faker.internet.email()}', '${password}', '${faker.person.firstName()}', 2),
-        ('${faker.internet.email()}', '${password}', '${faker.person.firstName()}', 2),
-        ('${faker.internet.email()}', '${password}', '${faker.person.firstName()}', 2),
-        ('${faker.internet.email()}', '${password}', '${faker.person.firstName()}', 2),
-        ('${faker.internet.email()}', '${password}', '${faker.person.firstName()}', 2),
-        ('${faker.internet.email()}', '${password}', '${faker.person.firstName()}', 2)
-    `);
+    const usersPromise = [];
+
+    await queryRunner.query(
+      `INSERT INTO "user" ("email", "password", "firstName", "roleId") VALUES ('admin@example.com', '${password}', 'Super Admin', 1)`,
+    );
+
+    for (let i = 0; i < 100; i++) {
+      usersPromise.push(
+        queryRunner.query(`
+          INSERT INTO "user" ("email", "password", "firstName", "roleId")
+          VALUES ('${faker.internet.email()}', '${password}', '${faker.person.firstName()}', 2);`),
+      );
+    }
+
+    await Promise.all(usersPromise);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

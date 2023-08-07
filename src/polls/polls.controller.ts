@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  NotFoundException,
   Param,
   ParseIntPipe,
   Post,
@@ -38,8 +39,15 @@ export class PollsController {
 
   @Get(':id')
   @UseGuards(PollGuard)
-  findById(@Param('id', ParseIntPipe) id: number) {
-    return this.pollsService.findOne({ id });
+  async findById(
+    @Param('id', ParseIntPipe) id: number,
+    @RequestWithUser() user: Pick<User, 'id'>,
+  ) {
+    const poll = await this.pollsService.findOne({ id }, user.id);
+    if (!poll) {
+      throw new NotFoundException('Poll not found');
+    }
+    return poll;
   }
 
   @Post(':id/responses')

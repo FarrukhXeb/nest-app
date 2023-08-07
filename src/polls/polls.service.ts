@@ -33,7 +33,7 @@ export class PollsService {
 
   async find(userId: number, fields: FindOptionsWhere<Poll> = {}) {
     return this.pollRepository.find({
-      where: { ...fields, user: { id: userId } },
+      where: { ...fields },
       select: {
         id: true,
         title: true,
@@ -51,9 +51,12 @@ export class PollsService {
     });
   }
 
-  async findOne(where: FindOptionsWhere<Poll>) {
+  async findOne(where: FindOptionsWhere<Poll>, userId: number) {
     return this.pollRepository.findOne({
-      where,
+      where: {
+        ...where,
+        user: { id: userId },
+      },
       select: {
         id: true,
         title: true,

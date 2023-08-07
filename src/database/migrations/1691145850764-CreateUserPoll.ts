@@ -19,6 +19,20 @@ export class CreateUserPoll1691145850764 implements MigrationInterface {
         INSERT INTO "user_polls_poll" ("userId", "pollId") VALUES (3, 1);
         INSERT INTO "user_polls_poll" ("userId", "pollId") VALUES (4, 1);
     `);
+
+    const promises = [];
+
+    const randomUser = () => Math.floor(Math.random() * 100) + 1;
+    const randomPoll = () => Math.floor(Math.random() * 200) + 1;
+
+    for (let i = 1; i <= 4; i++) {
+      promises.push(
+        queryRunner.query(`
+        INSERT INTO "user_polls_poll" ("userId", "pollId") VALUES (${randomUser()}, ${randomPoll()});
+      `),
+      );
+    }
+    await Promise.all(promises);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

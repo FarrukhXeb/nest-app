@@ -20,15 +20,18 @@ describe('PollsController', () => {
       title: newPoll.title,
       participants: [{ id: 12 }, { id: 43 }, { id: 2 }],
     }),
-    findOne: jest.fn().mockReturnValue({
-      id: 1,
-      title: 'test poll',
-      participants: [{ id: 12 }, { id: 43 }, { id: 2 }],
-      questions: [
-        { id: 1, text: 'test question' },
-        { id: 2, text: 'test question 2' },
-        { id: 3, text: 'test question 3' },
-      ],
+    findOne: jest.fn().mockImplementation(({ id }) => {
+      if (id === 2) return null;
+      return {
+        id: 1,
+        title: 'test poll',
+        participants: [{ id: 12 }, { id: 43 }, { id: 2 }],
+        questions: [
+          { id: 1, text: 'test question' },
+          { id: 2, text: 'test question 2' },
+          { id: 3, text: 'test question 3' },
+        ],
+      };
     }),
   };
 
@@ -65,10 +68,16 @@ describe('PollsController', () => {
   });
 
   it('should get a poll with questions', async () => {
-    const response = await controller.findById(1);
+    const response = await controller.findById(1, { id: 1 });
     expect(response).toBeDefined();
     expect(response.id).toBe(1);
     expect(response.questions).toBeDefined();
     expect(response.questions.length).toBe(3);
+  });
+
+  it('should throw an error if poll not found', async () => {
+    await expect(controller.findById(2, { id: 1 })).rejects.toThrow(
+      'Poll not found',
+    );
   });
 });
