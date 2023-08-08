@@ -65,16 +65,16 @@ export class TokenService {
   }
 
   public async refreshTokens(refreshToken: string) {
-    const { user, ...token } = await this.verifyToken(
+    const data = await this.verifyToken(
       refreshToken,
       TokenType.REFRESH,
       this.configService.get('AUTH_REFRESH_SECRET'),
     );
-    if (!token) throw new UnauthorizedException('Refresh token not in DB');
+    if (!data) throw new UnauthorizedException('Refresh token not in DB');
     // Removing old refresh_token from DB
-    this.tokenRepository.delete({ id: token.id });
+    this.tokenRepository.delete({ id: data.id });
     // const { user } = token;
-    return { ...(await this.generateAuthTokens(user)), user: user };
+    return { ...(await this.generateAuthTokens(data.user)), user: data.user };
   }
 
   public async verifyToken(
