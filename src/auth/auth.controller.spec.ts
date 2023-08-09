@@ -25,15 +25,15 @@ describe('AuthController', () => {
   };
 
   const mockAuthService = {
-    login: jest.fn((dto) => loginResponse),
+    login: jest.fn(() => loginResponse),
     register: jest.fn(),
     logout: jest.fn(),
-    refreshTokens: jest.fn((refreshToken: string) => ({
+    refreshTokens: jest.fn(() => ({
       ...loginResponse,
       token: 'some-new-access-token',
       refreshToken: 'some-new-refresh-token',
     })),
-    me: jest.fn((userId) => user),
+    me: jest.fn(() => user),
   };
 
   const mockResponse = {
