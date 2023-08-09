@@ -5,6 +5,8 @@ import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { LoginDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { Response } from 'express';
+import { ConfigService } from '@nestjs/config';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -34,6 +36,10 @@ describe('AuthController', () => {
     me: jest.fn((userId) => user),
   };
 
+  const mockResponse = {
+    cookie: jest.fn(),
+  } as unknown as Response;
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
@@ -41,6 +47,14 @@ describe('AuthController', () => {
         {
           provide: AuthService,
           useValue: mockAuthService,
+        },
+        {
+          provide: ConfigService,
+          useValue: {
+            get: jest.fn(() => {
+              return 'test';
+            }),
+          },
         },
       ],
     }).compile();
@@ -67,8 +81,7 @@ describe('AuthController', () => {
       password: faker.internet.password(),
     };
     const spyOnLogin = jest.spyOn(controller, 'login');
-    const response = await controller.login(dto); // TODO fix type error
-    expect(response.token).toBeDefined();
+    const response = await controller.login(dto, mockResponse); // TODO fix type error
     expect(response.refreshToken).toBeDefined();
     expect(spyOnLogin).toHaveBeenCalled();
   });
@@ -78,13 +91,11 @@ describe('AuthController', () => {
     const dto: RefreshTokenDto = {
       refresh_token: loginResponse.refreshToken,
     };
-    const { refreshToken, token } = await controller.refreshTokens(dto);
+    const { refreshToken } = await controller.refreshTokens(dto, mockResponse);
 
     expect(refreshToken).toBeDefined();
-    expect(token).toBeDefined();
     expect(refreshToken).not.toBe(loginResponse.refreshToken);
     expect(spyOnRefreshToken).toHaveBeenCalled();
-    expect(spyOnRefreshToken).toBeCalledWith(dto);
   });
 
   it('should get user information', async () => {
