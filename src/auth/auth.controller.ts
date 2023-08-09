@@ -7,6 +7,7 @@ import {
   HttpStatus,
   Post,
   Query,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -17,10 +18,21 @@ import { LoginResponseType } from './types/login-response.type';
 import { User } from 'src/users/entities/user.entity';
 import { RequestWithUser } from './decorators/user-request.decorator';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { Response } from 'express';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  cookieOptions = {
+    httpOnly: true,
+    domain: 'localhost', // only for production
+    path: '/api', // only for production
+    // maxAge: 3600, // only for production
+  };
+  constructor(
+    private readonly authService: AuthService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @Post('register')
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -30,8 +42,13 @@ export class AuthController {
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  public login(@Body() loginDto: LoginDto): Promise<LoginResponseType> {
-    return this.authService.login(loginDto);
+  public async login(
+    @Body() loginDto: LoginDto,
+    @Res({ passthrough: true }) response: Response,
+  ): Promise<Omit<LoginResponseType, 'token'>> {
+    const { token, ...rest } = await this.authService.login(loginDto);
+    this.setAuthCookies(response, token);
+    return rest;
   }
 
   @Post('logout')
@@ -39,7 +56,20 @@ export class AuthController {
   @HttpCode(HttpStatus.NO_CONTENT)
   public async logout(
     @RequestWithUser() user: Pick<User, 'id'>,
+    @Res({ passthrough: true }) response: Response,
   ): Promise<void> {
+    const isProd = this.configService.get('NODE_ENV') === 'production';
+
+    response.clearCookie('Authentication', {
+      ...this.cookieOptions,
+      secure: isProd,
+    });
+
+    response.clearCookie('Refresh', {
+      ...this.cookieOptions,
+      secure: isProd,
+    });
+
     return await this.authService.logout({
       id: user.id, // the user id
     });
@@ -48,10 +78,15 @@ export class AuthController {
   @Post('refresh')
   @UseGuards(AuthGuard('jwt-refresh'))
   @HttpCode(HttpStatus.OK)
-  public refreshTokens(
+  public async refreshTokens(
     @Query() refreshTokenDto: RefreshTokenDto,
-  ): Promise<Omit<LoginResponseType, 'user'>> {
-    return this.authService.refreshTokens(refreshTokenDto.refresh_token);
+    @Res({ passthrough: true }) response: Response,
+  ): Promise<Omit<LoginResponseType, 'token'>> {
+    const { token, ...rest } = await this.authService.refreshTokens(
+      refreshTokenDto.refresh_token,
+    );
+    this.setAuthCookies(response, token);
+    return rest;
   }
 
   @Get('me')
@@ -68,5 +103,13 @@ export class AuthController {
     @RequestWithUser() user: Pick<User, 'id'>,
   ): Promise<void> {
     return await this.authService.delete(user.id);
+  }
+
+  setAuthCookies(response: Response, token: string) {
+    const isProd = this.configService.get('NODE_ENV') === 'production';
+    response.cookie('Authentication', token, {
+      ...this.cookieOptions,
+      secure: isProd,
+    });
   }
 }

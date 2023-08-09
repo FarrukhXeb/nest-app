@@ -43,7 +43,6 @@ export class CreateUser1690437234031 implements MigrationInterface {
   public async down(queryRunner: QueryRunner): Promise<void> {
     // Drop foreign key constraint from "user" table
     const table = await queryRunner.getTable('user');
-    console.log(table);
     const foreignKey = table.foreignKeys.find(
       (fk) => fk.columnNames.indexOf('roleId') !== -1,
     );

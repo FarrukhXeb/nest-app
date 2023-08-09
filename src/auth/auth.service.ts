@@ -57,11 +57,12 @@ export class AuthService {
   }
 
   async refreshTokens(_refreshToken: string) {
-    const { token, refreshToken, tokenExpires } =
+    const { token, refreshToken, tokenExpires, user } =
       await this.tokenService.refreshTokens(_refreshToken);
 
     return {
       token,
+      user,
       refreshToken,
       tokenExpires,
     };
