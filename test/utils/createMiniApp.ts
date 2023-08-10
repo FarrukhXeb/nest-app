@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import cookieParser from 'cookie-parser';
 import { AuthModule } from 'src/auth/auth.module';
 import { TypeormConfigService } from 'src/database/typeorm-config.service';
+import { PollsModule } from 'src/polls/polls.module';
 import { RolesModule } from 'src/roles/roles.module';
 import { TokenModule } from 'src/token/token.module';
 import { UsersModule } from 'src/users/users.module';
@@ -26,6 +27,7 @@ export const createMiniApp = async () => {
       UsersModule,
       TokenModule,
       RolesModule,
+      PollsModule,
     ],
     providers: [ConfigService],
   }).compile();
