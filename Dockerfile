@@ -5,7 +5,9 @@ RUN yarn install
 COPY . .
 
 FROM base as test
-CMD ["yarn", "test:e2e"]
+COPY ./script.sh /
+RUN chmod +x /script.sh
+ENTRYPOINT ["/script.sh"]
 
 FROM base as prod
 EXPOSE 3000
