@@ -11,7 +11,10 @@ export class Response {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User, (user) => user.polls)
+  @ManyToOne(() => User, (user) => user.polls, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   user: User;
 
   @ManyToOne(() => Question, (user) => user.responses)

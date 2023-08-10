@@ -36,7 +36,10 @@ export class Poll {
   @ManyToMany(() => User, (user) => user.polls)
   participants: User[];
 
-  @ManyToOne(() => User, (user) => user.createdPolls)
+  @ManyToOne(() => User, (user) => user.createdPolls, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   user: User;
 
   @OneToMany(() => Question, (question) => question.poll)

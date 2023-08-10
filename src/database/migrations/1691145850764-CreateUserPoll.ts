@@ -7,7 +7,7 @@ export class CreateUserPoll1691145850764 implements MigrationInterface {
             "userId" integer NOT NULL,
             "pollId" integer NOT NULL,
             CONSTRAINT "FK_9f8fd2dd2d001511526c88860d1" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE,
-            CONSTRAINT "FK_119e9b5e1a0f61c3800eeebc196" FOREIGN KEY ("pollId") REFERENCES "poll"("id") ON DELETE NO ACTION ON UPDATE NO ACTION,
+            CONSTRAINT "FK_119e9b5e1a0f61c3800eeebc196" FOREIGN KEY ("pollId") REFERENCES "poll"("id") ON DELETE CASCADE ON UPDATE NO ACTION,
             CONSTRAINT "PK_47f35a7f4f66631ec4bd95ceabd" PRIMARY KEY ("userId", "pollId")
         );
 

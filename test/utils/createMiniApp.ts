@@ -2,6 +2,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import cookieParser from 'cookie-parser';
 import { AuthModule } from 'src/auth/auth.module';
 import { TypeormConfigService } from 'src/database/typeorm-config.service';
 import { RolesModule } from 'src/roles/roles.module';
@@ -30,5 +31,6 @@ export const createMiniApp = async () => {
   }).compile();
   const app = moduleFixture.createNestApplication();
   app.useGlobalPipes(new ValidationPipe());
+  app.use(cookieParser());
   return app;
 };

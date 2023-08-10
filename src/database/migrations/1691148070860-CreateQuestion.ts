@@ -10,7 +10,7 @@ export class CreateQuestion1691148070860 implements MigrationInterface {
             "type" question_type_enum NOT NULL DEFAULT 'TEXT',
             "pollId" integer,
             CONSTRAINT "PK_21e5786aa0ea704ae185a79b2d5" PRIMARY KEY ("id"),
-            CONSTRAINT "FK_91e0701bef5000bf6bc11e50ff2" FOREIGN KEY ("pollId") REFERENCES "poll"("id") ON DELETE NO ACTION ON UPDATE NO ACTION
+            CONSTRAINT "FK_91e0701bef5000bf6bc11e50ff2" FOREIGN KEY ("pollId") REFERENCES "poll"("id") ON DELETE CASCADE ON UPDATE NO ACTION
         );
 
         INSERT INTO "question" ("text", "type", "pollId") VALUES ('What is your favorite color?', 'TEXT', 1);

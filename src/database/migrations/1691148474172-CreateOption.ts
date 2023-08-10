@@ -8,7 +8,7 @@ export class CreateOption1691148474172 implements MigrationInterface {
             "text" text NOT NULL,
             "questionId" integer,
             CONSTRAINT "PK_e6090c1c6ad8962eea97abdbe63" PRIMARY KEY ("id"),
-            CONSTRAINT "FK_b94517ccffa9c97ebb8eddfcae3" FOREIGN KEY ("questionId") REFERENCES "question"("id") ON DELETE NO ACTION ON UPDATE NO ACTION
+            CONSTRAINT "FK_b94517ccffa9c97ebb8eddfcae3" FOREIGN KEY ("questionId") REFERENCES "question"("id") ON DELETE CASCADE ON UPDATE NO ACTION
         );
         INSERT INTO "option" ("text", "questionId") VALUES ('Red', 1);
         INSERT INTO "option" ("text", "questionId") VALUES ('Blue', 1);

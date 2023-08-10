@@ -5,11 +5,11 @@ import { createMiniApp } from './utils/createMiniApp';
 
 describe('Auth user (e2e)', () => {
   let app: INestApplication;
+  let cookies = [];
   const newUserFirstName = faker.person.firstName();
   const newUserLastName = faker.person.lastName();
   const newUserEmail = faker.internet.email();
   const newUserPassword = faker.internet.password({ length: 10 });
-  let apiToken: string;
 
   beforeAll(async () => {
     app = await createMiniApp();
@@ -51,18 +51,17 @@ describe('Auth user (e2e)', () => {
       .expect(HttpStatus.BAD_REQUEST);
   });
 
-  it('Login: /auth/login (POST)', () => {
-    return request(app.getHttpServer())
+  it('Login: /auth/login (POST)', async () => {
+    const response = await request(app.getHttpServer())
       .post('/auth/login')
       .send({ email: newUserEmail, password: newUserPassword })
       .expect(HttpStatus.OK)
       .expect(({ body }) => {
-        expect(body.token).toBeDefined();
         expect(body.refreshToken).toBeDefined();
         expect(body.tokenExpires).toBeDefined();
         expect(body.user.email).toBeDefined();
-        apiToken = body.token;
       });
+    cookies = response.header['set-cookie'];
   });
 
   it('Login should not work without email or password: /auth/login (POST)', async () => {
@@ -77,12 +76,22 @@ describe('Auth user (e2e)', () => {
       .expect(HttpStatus.BAD_REQUEST);
   });
 
-  it('Delete user: /auth/me (DELETE)', async () => {
+  it('Logged in should give the users data: /auth/me (GET)', () => {
+    return request(app.getHttpServer())
+      .get('/auth/me')
+      .set('Cookie', cookies)
+      .expect(HttpStatus.OK)
+      .expect(({ body }) => {
+        expect(body.email).toBe(newUserEmail);
+        expect(body.firstName).toBe(newUserFirstName);
+        expect(body.lastName).toBe(newUserLastName);
+      });
+  });
+
+  it('Delete user: /auth/me (DELETE)', () => {
     return request(app.getHttpServer())
       .delete('/auth/me')
-      .auth(apiToken, {
-        type: 'bearer',
-      })
+      .set('Cookie', cookies)
       .expect(HttpStatus.NO_CONTENT);
   });
 });

@@ -15,7 +15,7 @@ export class CreatePoll1691130203432 implements MigrationInterface {
         "updatedAt" TIMESTAMP NOT NULL DEFAULT now(),
         "userId" integer,
         CONSTRAINT "PK_03b5cf19a7f562b231c3458527e" PRIMARY KEY ("id"),
-        CONSTRAINT "FK_0610ebcfcfb4a18441a9bcdab2f" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION
+        CONSTRAINT "FK_0610ebcfcfb4a18441a9bcdab2f" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE NO ACTION
       );
       CREATE INDEX "IDX_0610ebcfcfb4a18441a9bcdab2" ON "poll" ("title");
       CREATE INDEX "IDX_0610ebcfcfb4a18441a9bcdab2f" ON "poll" ("userId");

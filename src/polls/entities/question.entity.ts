@@ -18,7 +18,10 @@ export class Question {
   @Column({ type: 'text' })
   text: string;
 
-  @ManyToOne(() => Poll, (poll) => poll.questions)
+  @ManyToOne(() => Poll, (poll) => poll.questions, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   poll: Poll;
 
   @OneToMany(() => Option, (option) => option.question, { eager: true })
